@@ -12,7 +12,7 @@ env:
   IMAGE: simm-teste
   TAG: main
   NAMESPACE: simm
-  PROJECT_NAME: simm
+  PROJECT_NAME: ${{ secrets.GKE_PROJECT }}
 
 jobs:
   build:
