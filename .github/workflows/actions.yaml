@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-
+      
 env:
   GKE_CLUSTER: simm-prd
   GKE_ZONE: southamerica-east1-a
@@ -35,12 +35,6 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
 
-      #- name: Setup gcloud CLI
-      #  uses: google-github-actions/setup-gcloud@v0
-      #  with:
-      #    service_account_key: ${{ secrets.GKE_SA_KEY }}
-      #    project_id: ${{ secrets.GKE_PROJECT }}
-
       - name: Configure Docker to use the gcloud command-line tool as a credential
         run: gcloud --quiet auth configure-docker
 
@@ -53,35 +47,18 @@ jobs:
 
       - name: Build container image
         run: docker build -t gcr.io/$PROJECT_NAME/$IMAGE:$TAG .
-        #run: |-
-        #  docker build \
-        #    --tag "gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA" \
-        #    --build-arg GITHUB_SHA="$GITHUB_SHA" \
-        #    --build-arg GITHUB_REF="$GITHUB_REF" \
 
       - name: Push image to Google Container Registry
-        run: docker push gcr.io/$PROJECT_NAME/$IMAGE:$TAG
-        #run: |-
-        #  docker push gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA        
+        run: docker push gcr.io/$PROJECT_NAME/$IMAGE:$TAG       
 
       - name: Get the GKE credentials so we can deploy to the cluster
         run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-
-      # Set up kustomize
-      - name: Set up Kustomize
-        run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
 
       - name: Delete deployment
         run: kubectl delete deployment.apps/$DEPLOYMENT_NAME -n $NAMESPACE --ignore-not-found
 
       - name: Deploy to Google Kubernetes Engine
         run: kubectl apply -f $GITHUB_WORKSPACE/k8s/prd
-        #run: |-
-        #  cd $GITHUB_WORKSPACE/k8s/prd
-        #  ../../kustomize edit set image gcr.io/simm/simm-teste=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-        #  ../../kustomize build . | kubectl apply -f -
 
       - name: Verify deployment
         run: |-
