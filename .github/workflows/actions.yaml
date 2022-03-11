@@ -80,7 +80,7 @@ jobs:
         #run: kubectl apply -f $GITHUB_WORKSPACE/k8s/prd
         run: |-
           cd $GITHUB_WORKSPACE/k8s/prd
-          ../../kustomize edit set image gcr.io/simm-343120/simm-teste=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          ../../kustomize edit set image gcr.io/simm/simm-teste=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           ../../kustomize build . | kubectl apply -f -
 
       - name: Verify deployment

@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: simm-teste-container
-        image: gcr.io/simm-343120/simm-teste
+        image: gcr.io/simm/simm-teste
         ports:
           - containerPort: 80
