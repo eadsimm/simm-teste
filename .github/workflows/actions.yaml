@@ -41,7 +41,7 @@ jobs:
           credentials: ${{ secrets.GKE_SA_KEY }}
 
       - name: Build container image
-        run: docker build -t gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA" .
+        run: docker build -t gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA .
         #run: |-
         #  docker build \
         #    --tag "gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA" \
@@ -51,7 +51,7 @@ jobs:
       - name: Push image to Google Container Registry
         #run: docker push gcr.io/$PROJECT_NAME/$IMAGE:$TAG
         run: |-
-          docker push "gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA"        
+          docker push gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA        
 
       - name: Get the GKE credentials so we can deploy to the cluster
         run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
