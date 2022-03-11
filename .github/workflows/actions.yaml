@@ -34,10 +34,17 @@ jobs:
       - name: Configure Docker to use the gcloud command-line tool as a credential
         run: gcloud --quiet auth configure-docker
 
+      # Get the GKE credentials so we can deploy to the cluster
+      - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+        with:
+          cluster_name: ${GKE_CLUSTER}
+          location: ${GKE_ZONE}
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
       - name: Build container image
         run: docker build -t gcr.io/$PROJECT_NAME/$IMAGE:$TAG .
 
-      - name: Push image to DigitalOcean Container Registry
+      - name: Push image to Google Container Registry
         run: docker push gcr.io/$PROJECT_NAME/$IMAGE:$TAG
 
       - name: Get the GKE credentials so we can deploy to the cluster
