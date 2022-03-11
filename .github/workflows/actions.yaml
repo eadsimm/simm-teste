@@ -41,12 +41,12 @@ jobs:
           credentials: ${{ secrets.GKE_SA_KEY }}
 
       - name: Build container image
-        #run: docker build -t gcr.io/$PROJECT_NAME/$IMAGE:$TAG .
-        run: |-
-          docker build \
-            --tag "gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA" \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF="$GITHUB_REF" \
+        run: docker build -t gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA" .
+        #run: |-
+        #  docker build \
+        #    --tag "gcr.io/$PROJECT_NAME/$IMAGE:$GITHUB_SHA" \
+        #    --build-arg GITHUB_SHA="$GITHUB_SHA" \
+        #    --build-arg GITHUB_REF="$GITHUB_REF" \
 
       - name: Push image to Google Container Registry
         #run: docker push gcr.io/$PROJECT_NAME/$IMAGE:$TAG
