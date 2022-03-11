@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: simm-teste-container
-        image: containous/whoami
+        image: gcr.io/simm-343120/simm-teste
         ports:
           - containerPort: 80

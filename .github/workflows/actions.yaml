@@ -67,14 +67,26 @@ jobs:
       - name: Get the GKE credentials so we can deploy to the cluster
         run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
+      # Set up kustomize
+      - name: Set up Kustomize
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
       - name: Delete deployment
         run: kubectl delete deployment.apps/$DEPLOYMENT_NAME -n $NAMESPACE --ignore-not-found
 
       - name: Deploy to Google Kubernetes Engine
-        run: kubectl apply -f $GITHUB_WORKSPACE/k8s/prd
+        #run: kubectl apply -f $GITHUB_WORKSPACE/k8s/prd
+        run: |-
+          cd $GITHUB_WORKSPACE/k8s/prd
+          ./kustomize edit set image gcr.io/simm-343120/simm-teste=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          ./kustomize build . | kubectl apply -f -
 
       - name: Verify deployment
-        run: kubectl rollout status deployment.apps/$DEPLOYMENT_NAME -n $NAMESPACE
+        run: |-
+           kubectl rollout status deployment.apps/$DEPLOYMENT_NAME -n $NAMESPACE
+           kubectl get services -o wide
 
       #- name: Microsoft Teams Notification
       #  uses: skitionek/notify-microsoft-teams@master
