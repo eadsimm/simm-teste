@@ -16,5 +16,6 @@ spec:
       containers:
       - name: simm-teste-container
         image: gcr.io/simm-343120/simm-teste:main
+        imagePullPolicy: Always
         ports:
           - containerPort: 3000
