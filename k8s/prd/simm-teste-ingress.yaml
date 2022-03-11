@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simm-teste-ingress
+  namespace: simm
+  annotations:
+    kubernetes.io/ingress.class: kong
+    cert-manager.io/cluster-issuer: 'letsencrypt'
+    nginx.org/client-max-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  tls:
+    - hosts:
+        - simm-teste.prd.simm.softdesign.com.br
+      secretName: simm-tls
+  rules:
+    - host: simm-teste.prd.simm.softdesign.com.br
+      http:
+        paths:
+          - backend:
+              serviceName: simm-teste-service
+              servicePort: 80
+            path: /

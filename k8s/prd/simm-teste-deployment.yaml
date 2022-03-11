@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simm-teste-deployment
+  namespace: simm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simm-teste
+  template:
+    metadata:
+      labels:
+        app: simm-teste
+    spec:
+      containers:
+      - name: simm-teste-container
+        image: containous/whoami
+        ports:
+          - containerPort: 80

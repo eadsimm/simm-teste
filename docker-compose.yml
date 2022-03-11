@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  o2-teste:
+    image: softregistry.azurecr.io/o2/teste:1.0
+    container_name: o2-teste
+    restart: always
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-proxy"
+      - "traefik.http.routers.o2-teste.entrypoints=http"
+      - "traefik.http.routers.o2-teste.rule=Host(`teste.prd.e-dominios.com.br`)"
+      - "traefik.http.middlewares.o2-teste-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=100000000"
+      - "traefik.http.routers.o2-teste.middlewares=o2-teste-https-redirect"
+      - "traefik.http.routers.o2-teste-secure.entrypoints=https"
+      - "traefik.http.routers.o2-teste-secure.rule=Host(`teste.prd.e-dominios.com.br`)"
+      - "traefik.http.routers.o2-teste-secure.tls=true"
+      - "traefik.http.routers.o2-teste-secure.tls.certresolver=lets"
+      - "traefik.http.services.o2-teste-secure.loadbalancer.server.port=3000"
+
+networks:
+    traefik-proxy:
+        external: true
