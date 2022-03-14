@@ -62,6 +62,7 @@ jobs:
 
       - name: Verify deployment
         run: |-
+           echo "chave " ${{ secrets.GKE_SA_KEY }} 
            kubectl rollout status deployment.apps/$DEPLOYMENT_NAME -n $NAMESPACE
            kubectl get services -o wide
 
