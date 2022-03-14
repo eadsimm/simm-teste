@@ -19,7 +19,7 @@ jobs:
     name: Build, push, and deploy
     runs-on: ubuntu-latest
     env:
-      VAR_1: teste
+      VAR_1: ${{ secrets.GKE_SA_KEY }} 
     steps:
       - name: Checkout staging
         uses: actions/checkout@v2
@@ -62,7 +62,7 @@ jobs:
 
       - name: Verify deployment
         run: |-
-           echo "chave " ${{ secrets.GKE_SA_KEY }} 
+           echo "chave " $VAR_1 
            kubectl rollout status deployment.apps/$DEPLOYMENT_NAME -n $NAMESPACE
            kubectl get services -o wide
 
